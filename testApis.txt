@@ -1,0 +1,4 @@
+https://api.github.com
+https://jsonplaceholder.typicode.com/todos/1
+https://httpbin.org/delay/3
+https://httpbin.org/status/500
