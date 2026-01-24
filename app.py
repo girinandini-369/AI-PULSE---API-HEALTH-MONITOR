@@ -10,16 +10,16 @@ from email.mime.text import MIMEText
 st.set_page_config(page_title="AI PULSE – API Health Monitor", layout="wide")
 st.title("📡 AI PULSE – API Health Monitor")
 
-# ---------------- AUTO REFRESH (CRITICAL) ----------------
+# ---------------- AUTO REFRESH ----------------
 from streamlit_autorefresh import st_autorefresh
-st_autorefresh(interval=3000, key="pulse")  # 3 seconds
+st_autorefresh(interval=3000, key="pulse")  # every 3 sec
 
 # ---------------- EMAIL CONFIG ----------------
-SENDER_EMAIL = "richiesgarden333@gmail.com"
-SENDER_PASSWORD = "pktf uuas udwn lrib"   # App password
-RECEIVER_EMAIL = "richiesgarden333@gmail.com"
+SENDER_EMAIL = "your_email@gmail.com"         # Replace with your email
+SENDER_PASSWORD = "your_app_password"        # App password
+RECEIVER_EMAIL = "your_email@gmail.com"      # Can be same or different
 
-# ---------------- SESSION ----------------
+# ---------------- SESSION STATE ----------------
 if "apis" not in st.session_state:
     st.session_state.apis = []
 if "data" not in st.session_state:
@@ -43,10 +43,10 @@ st.markdown("""
 # ---------------- ADD API ----------------
 st.subheader("➕ Add API")
 api_input = st.text_input("Paste API URL")
-
 if st.button("Add API"):
     if api_input and api_input not in st.session_state.apis:
         st.session_state.apis.append(api_input)
+        st.success("API added")
 
 # ---------------- API LIST ----------------
 st.write("### 📌 Monitored APIs")
@@ -87,7 +87,7 @@ def send_alert(api, status, issue):
         return
     try:
         body = f"""
-API FAILURE ALERT
+🚨 API ALERT 🚨
 
 API: {api}
 Status: {status}
@@ -112,31 +112,19 @@ def call_api(api):
     try:
         start = datetime.now()
         r = requests.get(api, timeout=10)
-        time_ms = round((datetime.now() - start).total_seconds()*1000, 2)
+        time_ms = round((datetime.now() - start).total_seconds()*1000,2)
         issue = STATUS_MAP.get(r.status_code, "Unknown status")
-        return {
-            "Time": datetime.now().strftime("%H:%M:%S"),
-            "API": api,
-            "Status": r.status_code,
-            "Response Time (ms)": time_ms,
-            "Issue": issue
-        }
+        return {"Time": datetime.now().strftime("%H:%M:%S"), "API": api, "Status": r.status_code,
+                "Response Time (ms)": time_ms, "Issue": issue}
     except requests.exceptions.Timeout:
-        return {
-            "Time": datetime.now().strftime("%H:%M:%S"),
-            "API": api,
-            "Status": "TIMEOUT",
-            "Response Time (ms)": None,
-            "Issue": "API did not respond in time"
-        }
+        return {"Time": datetime.now().strftime("%H:%M:%S"), "API": api, "Status": "TIMEOUT",
+                "Response Time (ms)": None, "Issue": "API did not respond in time"}
     except requests.exceptions.ConnectionError:
-        return {
-            "Time": datetime.now().strftime("%H:%M:%S"),
-            "API": api,
-            "Status": "CONNECTION ERROR",
-            "Response Time (ms)": None,
-            "Issue": "Connection failed"
-        }
+        return {"Time": datetime.now().strftime("%H:%M:%S"), "API": api, "Status": "CONNECTION ERROR",
+                "Response Time (ms)": None, "Issue": "Connection failed"}
+    except Exception as e:
+        return {"Time": datetime.now().strftime("%H:%M:%S"), "API": api, "Status": "ERROR",
+                "Response Time (ms)": None, "Issue": str(e)}
 
 # ---------------- MONITOR LOOP ----------------
 if st.session_state.running and st.session_state.apis:
@@ -145,26 +133,27 @@ if st.session_state.running and st.session_state.apis:
         for r in results:
             st.session_state.data.append(r)
 
-# ---------------- DATA ----------------
+# Keep last 300 events
 st.session_state.data = st.session_state.data[-300:]
-df = pd.DataFrame(st.session_state.data)
+
+# ---------------- DATAFRAME ----------------
+df = pd.DataFrame(st.session_state.data, columns=["Time","API","Status","Response Time (ms)","Issue"])
 
 # ---------------- HEALTH CARDS ----------------
-if not df.empty:
+if st.session_state.apis:
     st.subheader("🟢 API Health Cards")
-    cols = st.columns(len(st.session_state.apis))
-
     for i, api in enumerate(st.session_state.apis):
         last = df[df["API"]==api].tail(1)
         if last.empty:
-            cols[i].markdown("<div class='card gray'>Waiting…</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='card gray'>{api.split('//')[-1]}<br>Waiting…</div>", unsafe_allow_html=True)
             continue
 
         s = last["Status"].values[0]
         t = last["Response Time (ms)"].values[0]
         issue = last["Issue"].values[0]
 
-        if not isinstance(s, int) or s != 200:
+        # Color logic
+        if not isinstance(s,int) or s != 200:
             color = "red"
             send_alert(api, s, issue)
         elif t and t > 1000:
@@ -172,14 +161,14 @@ if not df.empty:
         else:
             color = "green"
 
-        cols[i].markdown(
+        st.markdown(
             f"<div class='card {color}'>{api.split('//')[-1]}<br>{s} | {issue}<br>⏱ {t} ms</div>",
             unsafe_allow_html=True
         )
 
-# ---------------- LOG TABLE ----------------
+# ---------------- LIVE LOG TABLE ----------------
 if not df.empty:
-    st.subheader("📋 Live API Events (Auto-Updating)")
+    st.subheader("📋 Live API Events")
     st.dataframe(df.tail(50), use_container_width=True)
 
 # ---------------- DOWNLOAD ----------------
