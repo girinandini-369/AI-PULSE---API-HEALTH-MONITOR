@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 streamlit run app.py
 
 https://api.github.com
@@ -20,3 +21,27 @@ https://api.coindesk.com/v1/bpi/currentprice.json
 🔴 Bad / Unreliable
 https://httpbin.org/delay/5
 https://httpbin.org/status/500
+=======
+streamlit run app.py
+
+https://api.github.com
+https://jsonplaceholder.typicode.com/todos/1
+https://httpbin.org/delay/3
+https://httpbin.org/status/500
+
+🟢 Healthy
+https://jsonplaceholder.typicode.com/posts
+https://restcountries.com/v3.1/all
+https://catfact.ninja/fact
+https://dog.ceo/api/breeds/image/random
+https://api.publicapis.org/entries
+
+🟡 Medium
+https://dummyjson.com/users
+https://www.boredapi.com/api/activity
+https://api.coindesk.com/v1/bpi/currentprice.json
+
+🔴 Bad / Unreliable
+https://httpbin.org/delay/5
+https://httpbin.org/status/500
+>>>>>>> c0af13a3c303713ea1407c74c4d69ddb3845c769

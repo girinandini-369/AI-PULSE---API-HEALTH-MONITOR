@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 streamlit
 requests
 pandas
 streamlit-autorefresh
+=======
+streamlit
+requests
+pandas
+streamlit-autorefresh
+>>>>>>> c0af13a3c303713ea1407c74c4d69ddb3845c769
