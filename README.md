@@ -1,5 +1,16 @@
 # 📡 AI PULSE – API Health Monitor
 
+![Python](https://img.shields.io/badge/Python-3.x-brightgreen)
+![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-ff4b4b)
+![Status](https://img.shields.io/badge/Monitoring-Real--time-blue)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+**🔗 Live Demo:** [xvxwxqyd9wskvfvvjotypz.streamlit.app](https://xvxwxqyd9wskvfvvjotypz.streamlit.app/)
+
+> Note: Streamlit Community Cloud apps sleep after inactivity — the first load may take ~20–30s to wake up, and you may see a "Yes, get this app back up!" button you need to click.
+
+---
+
 ## 🚀 Overview
 
 AI Pulse is a real-time API monitoring system that tracks the health, response time, and availability of multiple APIs through an interactive dashboard.
@@ -32,15 +43,15 @@ This project automates API health checks by continuously sending requests, analy
 
 ## 🧰 Tech Stack
 
-| Tool | Purpose |
-|------|---------|
-| Python | Core language |
-| Streamlit | Dashboard UI |
-| Requests | HTTP health checks |
-| Pandas | Data handling & CSV export |
-| concurrent.futures | Multithreaded API polling |
-| streamlit-autorefresh | Auto-refresh dashboard |
-| SMTP | Email alert system |
+| Tool                   | Purpose                     |
+| ----------------------- | ----------------------------- |
+| Python                   | Core language                  |
+| Streamlit                | Dashboard UI                   |
+| Requests                 | HTTP health checks             |
+| Pandas                   | Data handling & CSV export     |
+| concurrent.futures        | Multithreaded API polling      |
+| streamlit-autorefresh     | Auto-refresh dashboard         |
+| SMTP                      | Email alert system             |
 
 ---
 
@@ -71,7 +82,7 @@ ai-pulse/
 
 ## ▶️ How to Run Locally
 
-```bash
+```
 git clone <your-repo-link>
 cd ai-pulse
 pip install -r requirements.txt
@@ -86,13 +97,6 @@ requests
 pandas
 streamlit-autorefresh
 ```
-
----
-
-## 🌐 Live Demo
-
-Deployed on Streamlit Cloud:
-🔗 [https://xvxwxqyd9wskvfvvjotypz.streamlit.app/](https://xvxwxqyd9wskvfvvjotypz.streamlit.app/)
 
 ---
 
@@ -124,6 +128,3 @@ Deployed on Streamlit Cloud:
 ## 🤝 Contributing
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
-
----
-
